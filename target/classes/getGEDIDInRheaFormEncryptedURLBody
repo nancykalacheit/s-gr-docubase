@@ -1,0 +1,15 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://www.docubase.com/integration/2010/02/webservice">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <web:getGEDIDInRheaFormEncryptedURL>
+         <web:authentication>
+            <identifier>variableUsername</identifier>
+            <token>variablePassword</token>
+         </web:authentication>
+         <web:baseName>GARANCE</web:baseName>
+         <web:viewFormCode>ged</web:viewFormCode>
+         <web:request>EQU(VariableX,VariableY)</web:request>
+         <web:ID>1</web:ID>
+      </web:getGEDIDInRheaFormEncryptedURL>
+   </soapenv:Body>
+</soapenv:Envelope>

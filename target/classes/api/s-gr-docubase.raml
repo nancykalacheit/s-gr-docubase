@@ -1,0 +1,84 @@
+#%RAML 1.0
+title: s-gr-docubase
+version: v1
+
+uses:
+  rt: library/resource-types.raml
+  dtdocument: /data-types/Document/document-data-type.raml
+  dttag: /data-types/Tag/tag-data-type.raml
+  dtcase: /data-types/Case/case-data-type.raml
+
+traits:
+  client-id-secret-required: !include /exchange_modules/4ee67a21-421f-4c2f-ad1d-5abd11c095a9/client-id-enforcement/1.0.0/client-id-enforcement.raml
+/searchDocument:
+  is: [client-id-secret-required] 
+  type: 
+    rt.read-only-resource-type:
+      getResponseExamples: 
+        Response example 1: !include examples/Document/documents.raml
+      getResponseType: dtdocument.solutionExtendedList
+      
+/searchDocument/{index}/{value}:
+  is: [client-id-secret-required] 
+  type: 
+    rt.read-only-resource-type:
+      getResponseExamples: 
+        Response example 1: !include examples/Document/documents.raml
+      getResponseType: dtdocument.solutionExtendedList
+      
+/tag/{gedId}:
+  is: [client-id-secret-required] 
+  type: 
+    rt.read-only-resource-type:
+      getResponseExamples: 
+        Response example 1: !include examples/Tag/tag.raml
+      getResponseType: dttag.tag
+
+/getTree:
+    is: [client-id-secret-required] 
+    type:
+      rt.read-only-resource-type:
+        getResponseExamples: 
+          Example 1:
+        getResponseType: 
+
+/case/{id}:
+    is: [client-id-secret-required] 
+    type: 
+      rt.read-write-resource-type:
+        getResponseExamples: 
+          Response example 1: 
+        getResponseType: 
+        postRequestExamples: 
+          Request example 1: !include examples/Case/case.raml
+        postRequestType: dtcase.case
+        postResponseExamples: 
+          Response example 1: 
+        postResponseType: 
+
+              
+/base/{baseId}/case/{id}:
+    patch:
+      body:
+        application/json:
+          examples: !include examples/Document/post-document.raml
+          type: dtdocument.postDocument
+      responses: 
+        201:
+          body:
+            application/json:
+              examples: !include examples/Document/post-document.raml
+              type: dtdocument.postDocument
+
+/file:
+    is: [client-id-secret-required] 
+    type:
+      rt.read-only-resource-type:
+        getResponseExamples: 
+          Example 1:
+        getResponseType: 
+
+/api-status:
+  is: [client-id-secret-required] 
+  type: 
+    rt.api-status-resource-type
