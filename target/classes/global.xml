@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<apikit:config outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" doc:name="Router" doc:id="3db013a2-0f4a-4717-8d18-7fed58d52bd8" name="s-gr-docubase-config" api="s-gr-docubase.raml" disableValidations="true"/>
+	 <http:request-config name="https-request-s-gr-docubase" doc:name="HTTP Request configuration" doc:id="bfbe34bd-6afb-42ae-a006-60736bd4ac2b" basePath="/${config.docubase.path.baseURI}">
+		<http:request-connection protocol="${config.docubase.protocol}" host="${config.docubase.host}" connectionIdleTimeout="${config.docubase.timeout}">
+			<http:authentication >
+				<http:basic-authentication username="${config.docubase.username}" password="${config.docubase.password}" />
+			</http:authentication>
+		</http:request-connection>
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="4a81bd56-7ffb-4f4e-b417-6db04d488ffb" file="environment\default-prop.yaml" />
+	<import doc:name="Import" doc:id="3b039bb0-024b-497d-acee-bc2a12749732" file="common/audit/audit.xml" />
+	<import doc:name="Import" doc:id="abb73df5-0bf5-452c-99e5-59463a81a7a7" file="common/audit/commons.xml" />
+	<import doc:name="Import" doc:id="47ec1ea6-6a8a-4b1c-9d7d-1797df537cc7" file="common/error/error-handling.xml" />
+	<import doc:name="Import" doc:id="97d5dcd6-f86a-4986-88b2-074beac662d5" file="common/error/global-api-error.xml" />
+	<import doc:name="Import" doc:id="f49e0a72-d824-437a-aa7c-5aa53d286623" file="common/error/global-error.xml" />
+	<global-property doc:name="Global Property" doc:id="6aaab65a-036b-44b6-9058-f396177e88bb" name="mule.env" value="devLocal" />
+	<configuration-properties doc:name="Configuration properties" doc:id="f77e9b07-9df3-4f7d-8880-61de8155008a" file="environment/${mule.env}.yaml" />
+	<secure-properties:config name="s-gr-docubase-encryption" doc:name="Secure Properties Config" doc:id="f77c3835-3927-4e10-abc7-59e8de5d9e35" file="secure/${mule.securefile}.yaml" key="ecnPassword" >
+		<secure-properties:encrypt algorithm="Blowfish" mode="ECB" />
+	</secure-properties:config>
+	<global-property doc:name="Global Property" doc:id="269ef934-0eb1-465d-abd7-481430175f55" name="mule.securefile" value="dev-secure" />
+	<configuration-properties doc:name="Configuration properties" doc:id="b2b5ca5e-b2ea-45ae-a473-e96fc973a042" file="secure/${mule.securefile}.yaml" />
+	<configuration doc:name="Configuration" doc:id="0ef9f2f0-9019-4206-b902-084a129822da" defaultErrorHandler-ref="api-global-error-handler" />
+	<http:request-config name="Soap-WSRheaweb-config" doc:name="HTTP Request configuration" doc:id="4e496420-36c0-4366-9996-2c13b3d21db3">
+		<http:request-connection protocol="${config.docubase.protocol}" host="${config.docubase.host}" connectionIdleTimeout="${config.docubase.timeout}"/>
+	</http:request-config>
+	<http:listener-config
+		name="http-listener-config-system">
+		<http:listener-connection host="0.0.0.0"
+			port="${http.port}" connectionIdleTimeout="${http.timeout}" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="53cc4754-5efd-473c-a8f8-e4485ffc5cd3" >
+		<file:connection workingDir="C:\Users\nancy.kalach\Desktop\Tessi" />
+	</file:config>
+</mule>
