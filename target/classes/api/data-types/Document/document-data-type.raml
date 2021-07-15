@@ -1,0 +1,51 @@
+#%RAML 1.0 Library
+types:
+  
+  solutionExtendedList: solutionExtendedLists[]
+
+  solutionExtendedLists:
+    properties:
+      score: integer
+      documentExtended: documentExtended
+      termFulltext: string
+
+  documentExtended:
+    properties:
+      docFileName: string
+      overlayFormFileName: string
+      documentInformation: documentInformation
+      locked: boolean
+
+  documentInformation:
+    properties:
+      lifeCycleRule: integer
+      numDoc: integer
+      oldVersion: boolean
+      versionName: string
+      storageType: string
+      createDate: string
+      gedId: integer
+      docTitle: string
+      archivageDate: string
+      versionNumber: integer
+      docOwnerGroup: string
+      note: boolean
+      depositReceipt: boolean
+      overlayForm: boolean
+      uuid: string
+      docOwnerPublic: boolean
+      docOwnerUser: string
+      stampModif: integer
+      lifeCycleState: integer
+      lifeCycleIsLocked: boolean
+      annotation: boolean
+      documentSignature: boolean
+
+  postDocument:
+    properties:
+      criterionList: categoryFields[]
+  
+  categoryFields:
+    properties:
+      categoryId: integer
+      word: string
