@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	
+	<flow
+		name="get:\searchDocument\(index)\(value):s-gr-docubase-config">
+		<ee:transform doc:name="Set Log Configuration"
+			doc:id="e661858c-3472-4457-956a-40b771c3f6a8">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="logMessage"><![CDATA[%dw 2.0
+output application/java
+---
+'System Docubase Search document - Start']]></ee:set-variable>
+				<ee:set-variable variableName="logCategory"><![CDATA[%dw 2.0
+output application/java
+---
+'Trace']]></ee:set-variable>
+				<ee:set-variable variableName="logLevel"><![CDATA[%dw 2.0
+output application/java
+---
+'INFO']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="mule-common-logger-subflow"
+			doc:id="b9d94835-b225-4e18-8f74-9c32751073a4"
+			name="mule-common-logger-subflow" />
+		<set-payload
+			value="#[output application/json&#10;---&#10;{&#10;grcRequest : 'EQU(' ++ attributes.uriParams.index ++ ',&quot;' ++ attributes.uriParams.value ++ '&quot;)'&#10;}]"
+			doc:name="GRC Request" doc:id="2f0adc2f-edd0-46b0-b78d-15033cfee8f9" />
+		<http:request method="GET"
+			doc:name="Get Document from Docubase"
+			doc:id="80b2a724-d934-42ce-8df8-fa7a63807830"
+			config-ref="https-request-s-gr-docubase"
+			path="#['${config.docubase.endpoint.getDocument}']">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	client_secret : 11,
+	client_id : 11
+}]]]></http:headers>
+			<http:query-params><![CDATA[#[payload]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Set Log Configuration"
+			doc:id="f0ab2c38-0930-47e7-8ae4-1836c158cdd1">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="logMessage"><![CDATA[%dw 2.0
+output application/java
+---
+'System Docubase Search document - Finish']]></ee:set-variable>
+				<ee:set-variable variableName="logCategory"><![CDATA[%dw 2.0
+output application/java
+---
+'Trace']]></ee:set-variable>
+				<ee:set-variable variableName="logLevel"><![CDATA[%dw 2.0
+output application/java
+---
+'INFO']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="mule-common-logger-subflow"
+			doc:id="a45f0d6b-7a9e-4974-bb6c-ba4c14f45d04"
+			name="mule-common-logger-subflow" />
+	</flow>
+	<flow name="patch:\base\(baseId)\case\(id):application\json:s-gr-docubase-config" doc:id="3abb7450-e3aa-4cff-846f-64bafd8393c2" >
+		<ee:transform doc:name="Set Log Configuration" doc:id="5dd6effe-e9e3-4293-84ca-a50a9d5d15d5" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+output application/java
+---
+'System Docubase Request - Update Document - Start']]></ee:set-variable>
+				<ee:set-variable variableName="logCategory" ><![CDATA[%dw 2.0
+output application/java
+---
+'Trace']]></ee:set-variable>
+				<ee:set-variable variableName="logLevel" ><![CDATA[%dw 2.0
+output application/java
+---
+'INFO']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="mule-common-logger-subflow" doc:id="6d23721d-fcda-4f20-b908-38c8bd64bdbe" name="mule-common-logger-subflow" />
+		<http:request method="PATCH" doc:name="Update Document in Docubase" doc:id="fc2997ab-e418-4ef9-a43d-2db9efed1dec" config-ref="https-request-s-gr-docubase" path="#['/basemanager/domain/1/base/' ++ attributes.uriParams.baseId ++ '/document/' ++ attributes.uriParams.id ++ '/tag']" >
+			<http:headers ><![CDATA[#[output application/json
+---
+{
+	//"X-db-connectAs" : attributes.headers.'X-db-connectAs'
+	"X-db-connectAs" : "chabchy"
+	
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="Set Log Configuration" doc:id="fc24d7d9-dee2-4626-a94a-118e42d205c0" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+output application/java
+---
+'System Docubase Request - Update Document - Finish']]></ee:set-variable>
+				<ee:set-variable variableName="logCategory" ><![CDATA[%dw 2.0
+output application/java
+---
+'Trace']]></ee:set-variable>
+				<ee:set-variable variableName="logLevel" ><![CDATA[%dw 2.0
+output application/java
+---
+'INFO']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="mule-common-logger-subflow" doc:id="d5192244-61b4-49ba-be94-08a682f363de" name="mule-common-logger-subflow" />
+	</flow>
+	<flow name="get:\getTree:s-gr-docubase-config" doc:id="dc928f22-f1f9-4bfd-a289-0c2caf08eb4b" >
+		<ee:transform doc:name="Set Log Configuration" doc:id="cc7dbf57-4389-426d-bb45-125ddea7ca9e" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+output application/java
+---
+'System Docubase Request - Plan de Classement - Start']]></ee:set-variable>
+				<ee:set-variable variableName="logCategory" ><![CDATA[%dw 2.0
+output application/java
+---
+'Trace']]></ee:set-variable>
+				<ee:set-variable variableName="logLevel" ><![CDATA[%dw 2.0
+output application/java
+---
+'INFO']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="mule-common-logger-subflow" doc:id="1b19260a-3d29-4e8f-b914-1dcdb12161d3" name="mule-common-logger-subflow" />
+		<ee:transform doc:name="SOAP Body" doc:id="69b38b12-d962-43d7-8d6a-45c8c3634b37" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output text/plain
+---
+write( (readUrl("classpath://getGEDIDInRheaFormEncryptedURLBody", "text/plain")) replace "VariableX" 
+with attributes.queryParams.'type', "text/plain") replace "VariableY" 
+with attributes.queryParams.'value' replace "variableUsername" 
+with '${config.docubase.username}' replace "variablePassword" 
+with '${config.docubase.pass}']]></ee:set-payload>
+			</ee:message>
+			<ee:variables />
+		</ee:transform>
+		<http:request method="POST" doc:name="Get Tree from Docubase" doc:id="4af83929-9a72-4574-ab44-62d72c900369" config-ref="Soap-WSRheaweb-config" path="#['${config.docubase.endpoint.getTree}']" responseTimeout="999999999"/>
+		<logger level="INFO" doc:name="Logger" doc:id="e7bf2257-11c2-44c5-abe7-d2e0ce8055d5" message="#[payload]" />
+		<ee:transform doc:name="get raw" doc:id="0c93f5bd-83c2-4a58-85b4-703a74c3fb0f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::core::Binaries
+output application/xml
+---
+
+read(payload.^raw, "application/xml")]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="to Json" doc:id="7189fbca-b6b2-4f08-af1d-96d1425890c5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload.Envelope.Body.getGEDIDInRheaFormEncryptedURLResponse.url]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Set Log Configuration" doc:id="bc16ed7c-06c7-47e1-9ae2-d291e4d0a826" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+output application/java
+---
+'System Docubase Request - Plan de Classement - Finish']]></ee:set-variable>
+				<ee:set-variable variableName="logCategory" ><![CDATA[%dw 2.0
+output application/java
+---
+'Trace']]></ee:set-variable>
+				<ee:set-variable variableName="logLevel" ><![CDATA[%dw 2.0
+output application/java
+---
+'INFO']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="mule-common-logger-subflow" doc:id="a6939073-3849-418d-ae18-db039e7ed878" name="mule-common-logger-subflow" />
+	</flow>
+	<flow name="get:\file:s-gr-docubase-config" doc:id="e229d25a-dc08-486f-aebe-d1c9781143b6" >
+		<ee:transform doc:name="Set Log Configuration" doc:id="04d2d923-e204-4389-b529-8a513759d43e" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+output application/java
+---
+'System Read File - Start']]></ee:set-variable>
+				<ee:set-variable variableName="logCategory" ><![CDATA[%dw 2.0
+output application/java
+---
+'Trace']]></ee:set-variable>
+				<ee:set-variable variableName="logLevel" ><![CDATA[%dw 2.0
+output application/java
+---
+'INFO']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="mule-common-logger-subflow" doc:id="afa3a32c-5fab-4682-9359-e1bb6a724843" name="mule-common-logger-subflow" />
+		<file:read doc:id="f650deb3-9f8f-48bd-adf2-512d556c8284" config-ref="File_Config" path="C:\Users\nancy.kalach\Desktop\Tessi\GARANCE-Salesforce-UUID-20210607_10H03.csv" outputMimeType='application/csv; lineseparator=";\\n"; separator=";"; header=true' outputEncoding='#["Cp1252"]' doc:name="Read" />
+		<ee:transform doc:name="Set Log Configuration" doc:id="c1f4bf4b-b419-459a-a210-1e374e7e806b" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="logMessage" ><![CDATA[%dw 2.0
+output application/java
+---
+'System Read File - Finish']]></ee:set-variable>
+				<ee:set-variable variableName="logCategory" ><![CDATA[%dw 2.0
+output application/java
+---
+'Trace']]></ee:set-variable>
+				<ee:set-variable variableName="logLevel" ><![CDATA[%dw 2.0
+output application/java
+---
+'INFO']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="mule-common-logger-subflow" doc:id="0258a249-95ed-4b25-b7dc-ef7e9e76d2f4" name="mule-common-logger-subflow" />
+	</flow>
+</mule>

@@ -1,0 +1,26 @@
+#%RAML 1.0 Library
+types:
+  tag:
+    type: object
+    properties:
+      archivageDate: string
+      createDate: string
+      digestAlgo: string
+      digestValueEncodedBase64: string
+      docFileName: string
+      docOwnerPublic: boolean
+      docOwnerGroup: string
+      docOwnerUser: string
+      docTitle: string
+      docType: string
+      gedId: integer
+      overlayFormFileName: string
+      storageType: string
+      uuid: string
+      criterionList: criterion[]
+
+  criterion:
+    type: object
+    properties:
+      word: string
+      categoryId: integer

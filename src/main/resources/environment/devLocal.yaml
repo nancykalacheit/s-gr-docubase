@@ -1,0 +1,49 @@
+# Environment specific properties
+environment:
+ name: "dev"
+# id: 998c26e2-3774-4ef5-b71b-dff93879263b
+  
+api:
+  name: "${application.name}-${environment.name}"
+  id: "329996"
+  version: "v1"
+  
+# Common properties
+common:
+  audit:
+    role:
+      logStart: "true"
+      logEnd: "true"
+      logInfo: "true"
+      logWarning: "true"
+      logError: "true"
+      logDebug: "true"
+    defaultLogPayloadLogic: "ALWAYS"
+    
+http:
+  port: "8084"
+  timeout: "99999999"
+  listener:
+    path: "/api/${api.name}/${api.version}/*"
+
+https:
+  listener:
+    path: "/api/${api.name}/${api.version}/*"
+    
+config:
+  docubase:
+    host: "rct-docubase-garance.tessitechno.fr"
+    protocol: "HTTPS"
+    timeout: "999999999"
+    username: "svc_api_docu"
+    password: "${secure::passwords.docubasePass}"
+    pass: "12&amp;2021Gar#"
+    path:
+      baseURI: "serviceweb/rest/api/usersession"
+    endpoint: 
+      getDocument: "/basemanager/domain/1/base/GARANCE/document"
+      getTag: "/tag"
+      getTree: "/wsrheaurl/cxf/wsu?wsdl"
+      patchDocument: "/basemanager/domain/1/base/GARANCE/document/1/tag"
+   
+  
