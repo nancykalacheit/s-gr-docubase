@@ -142,7 +142,7 @@ output application/java
 output text/plain
 ---
 write( (readUrl("classpath://getGEDIDInRheaFormEncryptedURLBody", "text/plain")) replace "VariableX" 
-with attributes.queryParams.'type', "text/plain") replace "VariableY" 
+with attributes.queryParams.'category', "text/plain") replace "VariableY" 
 with attributes.queryParams.'value' replace "variableUsername" 
 with '${config.docubase.username}' replace "variablePassword" 
 with '${config.docubase.pass}']]></ee:set-payload>
